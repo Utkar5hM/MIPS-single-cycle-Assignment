@@ -1,9 +1,9 @@
-module datapath(clk, reset, RegDst,AluSrc,MemtoReg,RegWrite,MemRead,MemWrite,Branch,ALUOp,OpCode);
+module datapath(clk, reset, RegDst,AluSrc,MemtoReg,RegWrite,MemRead,MemWrite,Branch,ALUOp,OpCode, Ne);
 
 input clk;
 input reset;
 
-input RegDst,AluSrc,MemtoReg,RegWrite,MemRead,MemWrite,Branch;
+input RegDst,AluSrc,MemtoReg,RegWrite,MemRead,MemWrite,Branch, Ne;
 
 wire [31:0] Instruction;
 
@@ -38,7 +38,7 @@ alucontrol AluControl(ALUOp, Instruction[5:0], ALUCtrl); //ALUControl
 alu Alu(ReadRegister1, muxalu_out, ALUCtrl, ALUout, Zero); //ALU
 
 pclogic PC(clk, reset, signExtend, PC_adr, PCsel); //generate PC
-andm andPC(Branch, Zero, PCsel); //AndPC (branch & zero)
+andm andPC(Branch, Zero, PCsel, Ne); //AndPC (branch & zero)
 signextend Signextend(signExtend, Instruction[15:0]); //Sign extend
 
 mux #(5) muxinstr(RegDst, Instruction[20:16],Instruction[15:11],muxinstr_out);//MUX for Write Register
