@@ -25,5 +25,5 @@ module Jaddress(
     input [3:0] pc_in,
     output [31:0] out
     );
-    assign out ={pc_in,in,{2'b00}};
+    assign out ={pc_in, {2'b00}, in};
 endmodule

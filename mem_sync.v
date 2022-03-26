@@ -22,6 +22,6 @@ always @(posedge clk) begin
 end
 
 
-initial $readmemh("memdata.dat", memory);
+initial $readmemh("D:/Studies/College/4th_Sem/EC340_comparch/MIPS-SCA/repo/MIPS-single-cycle-Assignment/memdata.dat", memory);
 
 endmodule

@@ -10,6 +10,6 @@ output [(S-1):0] d;
 reg [S-1:0] memory [L-1:0];
 assign d=memory[a];
 
-initial $readmemh("meminstr.dat", memory);
+initial $readmemh("D:/Studies/College/4th_Sem/EC340_comparch/MIPS-SCA/repo/MIPS-single-cycle-Assignment/meminstr.dat", memory);
 
 endmodule

@@ -1,14 +1,28 @@
-00004020
-00007020
-8d090040
-8d0a0044
-8d0b0048
-ad00004c
-8d0c0000
-8dcd004c
-01ac6820
-adcd004c
-012a4822
-010b4020
+00004820  //add $9, $0, $0           ; 8: add $t1, $zero, $zero # i (index) = 0 
+00008020  //add $16, $0, $0          ; 9: add $s0, $zero, $zero # base address =0 
+8e080000  //lw $8, 0($16)            ; 11: lw $t0, 0($s0) 
+00007820  //add $15, $0, $0          ; 12: add $t7, $zero, $zero # index of minimum 
+0000c820  //add $25, $0, $0          ; 14: add $t9, $zero, $zero 
+2011000a  //addi $17, $0, 10         ; 15: addi $s1, $zero, 10 
+0131582a  //slt $11, $9, $17         ; 17: slt $t3, $t1, $s1 # if i == 10 goto done 
+1160000c  //beq $11, $0, 12 [swapmin-0x00400040]
+01207020  //add $14, $9, $zero          ; 19: add $t6, $t1, $t1 # offset = index //
+020e6820  //add $13, $16, $14        ; 22: add $t5, $s0, $t6 # address = base_address + offset; 
+8dac0000  //lw $12, 0($13)           ; 23: lw $t4, 0($t5) # t4= arr[i] 
+0188502a  //slt $10, $12, $8         ; 24: slt $t2, $t4, $t0 # setting less than in t2 
+15400002  //bne $10, $0, 2 [min-0x0040005c]
+21290001  //addi $9, $9, 1           ; 28: addi $t1, $t1, 1 # i++ 
+
+08000006  //j 6 should go to line 7 as indexing is from 0 we jump to 6  j loop 
+
+000c4020  //add $8, $0, $12          ; 31: add $t0, $zero, $t4 # updating minimum value 
+00097820  //add $15, $0, $9          ; 33: add $t7, $zero, $t1 
+0800000D  //j Go to line 14 [b_loop] ; 34: j b_loop 
+8E0C0009  //lw $12, 9($16)          ; 37: lw $t4, 9($s0) # saving the last value of the array 
+01E07020  //add $14, $15, $zero        ; 38: add $t6, $t7, $zero # offset = min_index //
+AE080009  //sw $8, 9($16)           ; 41: sw $t0, 9($s0) # storing min value in last position 
+020e6820  //add $13, $16, $14        ; 42: add $t5, $s0, $t6 # min_address = base + offset 
+ADEC0000  //sw $12, 0($15)           ; 44: sw $t4, 0($t5) 
 11200001 //beq
-1129fff8 //beq
+1120FFFF //beq
+
