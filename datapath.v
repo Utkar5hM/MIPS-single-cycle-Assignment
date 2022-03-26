@@ -3,11 +3,11 @@ module datapath(clk, reset, RegDst,AluSrc,MemtoReg,RegWrite,MemRead,MemWrite,Bra
 input clk;
 input reset;
 
-input RegDst,AluSrc,MemtoReg,RegWrite,MemRead,MemWrite,Branch, Ne;
+input RegDst,AluSrc,MemtoReg,RegWrite,MemRead,MemWrite,Branch;
 
 wire [31:0] Instruction;
 
-input [1:0] ALUOp;
+input [1:0] ALUOp, Ne;
 wire [3:0] ALUCtrl;
 wire [31:0] ALUout;
 wire Zero;
@@ -24,11 +24,15 @@ wire [4:0] muxinstr_out;
 wire [31:0] muxalu_out;
 wire [31:0] muxdata_out;
 
+wire [31:0] muxPC_in;
+
+wire [31:0] Jadr;
+
 wire [31:0] ReadData;
 
 wire [31:0] signExtend;
 
-wire PCsel;
+wire [1:0] PCsel;
 
 mem_async meminstr(PC_adr[7:0],Instruction); //Instruction memory
 mem_sync memdata(clk, ALUout[7:0], ReadData, ReadRegister2, MemRead, MemWrite); //Data memory
@@ -37,9 +41,12 @@ rf registerfile(clk,RegWrite,Instruction[25:21],Instruction[20:16],muxinstr_out,
 alucontrol AluControl(ALUOp, Instruction[5:0], ALUCtrl); //ALUControl
 alu Alu(ReadRegister1, muxalu_out, ALUCtrl, ALUout, Zero); //ALU
 
-pclogic PC(clk, reset, signExtend, PC_adr, PCsel); //generate PC
+pclogic PC(clk, reset, muxPC_in, PC_adr, PCsel); //generate PC
 andm andPC(Branch, Zero, PCsel, Ne); //AndPC (branch & zero)
 signextend Signextend(signExtend, Instruction[15:0]); //Sign extend
+
+Jaddress jadd(Instruction[25:0], PC_adr[31:28], Jadr);
+mux #(32) muxPC(Ne[1], signExtend, Jadr,  muxPC_in);
 
 mux #(5) muxinstr(RegDst, Instruction[20:16],Instruction[15:11],muxinstr_out);//MUX for Write Register
 mux #(32) muxalu(AluSrc, ReadRegister2, signExtend, muxalu_out);//MUX for ALU

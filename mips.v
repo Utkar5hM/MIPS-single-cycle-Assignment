@@ -15,7 +15,7 @@ wire RegWrite;
 wire MemRead;
 wire MemWrite;
 wire Branch;
-wire Ne;
+wire [1:0] Ne;
 
 datapath Datapath(clk,reset,RegDst,ALUSrc,MemToReg,RegWrite,MemRead,MemWrite,Branch,ALUOp,OpCode, Ne);
 
